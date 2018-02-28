@@ -133,16 +133,16 @@ class PosixSequentialFile: public SequentialFile {
     return Status::OK();
   }
   virtual Status DeallocateDiskSpace(uint64_t offset, size_t len)
-  {//释放指定磁盘空间
+ // {//释放指定磁盘空间
     //FreeBSD has ftruncate() syscall, thats is very similar and differently from fallocate is portable.
     //https://www.freebsd.org/cgi/man.cgi?query=ftruncate&sektion=&manpath=freebsd-release-ports
     //if(posix_fallocate(fd,0, size)<0)
     //or
     //if(ftruncate(fd, size)<0)
-      if(posix_fallocate(fileno(file_), offset, len)<0)
-          return PosixError(filename_, errno);
-      return Status::OK();
-  }
+      //if(posix_fallocate(fileno(file_), offset, len)<0)
+     //     return PosixError(filename_, errno);
+    //  return Status::OK();
+  //}
 };
 
 // pread() based random-access
