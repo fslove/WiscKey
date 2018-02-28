@@ -27,22 +27,6 @@
 #include "util/posix_logger.h"
 #include "util/env_posix_test_helper.h"
 
-//FreeBSD 
-#ifndef FALLOC_FL_KEEP_SIZE
-#define FALLOC_FL_KEEP_SIZE     0x01 /* default is extend size */
-#endif
-#ifndef FALLOC_FL_PUNCH_HOLE
-#define FALLOC_FL_PUNCH_HOLE    0x02 /* de-allocates range */
-#endif
-#ifndef FALLOC_FL_ZERO_RANGE
-#define FALLOC_FL_ZERO_RANGE    0x10 /* zeroes out range */
-#endif
-#ifndef FALLOC_FL_COLLAPSE_RANGE
-#define FALLOC_FL_COLLAPSE_RANGE  0x08 /* reduces the size */
-#endif
-#ifndef FALLOC_FL_INSERT_RANGE
-#define FALLOC_FL_INSERT_RANGE  0x20 /* expands the size */
-#endif
 
 namespace leveldb {
 
@@ -155,7 +139,7 @@ class PosixSequentialFile: public SequentialFile {
     //if(posix_fallocate(fd,0, size)<0)
     //or
     //if(ftruncate(fd, size)<0)
-      if(fallocate(fileno(file_),FALLOC_FL_PUNCH_HOLE|FALLOC_FL_KEEP_SIZE, offset, len)<0)
+      if(posix_fallocate(fileno(file_), offset, len)<0)
           return PosixError(filename_, errno);
       return Status::OK();
   }
